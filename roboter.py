@@ -49,12 +49,6 @@ def main():
                 anime_count[row['Name']] += 1
             else:
                 anime_count[row['Name']] = 1
-    
-    # 重複したアニメがある場合、カウントを増やす
-    if anime in anime_count:
-        anime_count[anime] += 1
-    else:
-        anime_count[anime] = 1 
 
     with open('roboter-chatlog.csv', 'a', newline='') as f:
         fieldnames = ['Name', 'Count']
