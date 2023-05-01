@@ -11,7 +11,28 @@ def print_output(name):
 
 # おすすめのアニメを聞く関数を定義する
 def recommend_anime():
-    return input("Robota：おすすめのアニメは何ですか？")
+    # csvファイルからアニメの一覧を取得する
+    anime_list = {}
+    with open('roboter-chatlog.csv', 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            anime_list[row['Name']] = int(row['Count'])
+    
+    # アニメが何もない場合は、鬼滅の刃をおすすめする
+    if len(anime_list) == 0:
+        return "Robota:私のおすすめは、Demom Slayerです。"
+
+    # Count数が最大のアニメを取得する
+    max_count = 0
+    max_anime = ""
+    for anime_name, count in anime_list.items():
+        if count > max_count:
+            max_count = count
+            max_anime = anime_name
+
+    # 最大のアニメをおすすめする
+    print("Robota:私のおすすめは、" + max_anime + "です。\n")
+    return input("Robota:あなたのおすすめは何ですか？")
 
 # おすすめのアニメを答える関数を定義する
 def answer_anime(anime):
@@ -25,16 +46,15 @@ def say_goodbye():
 def main():
     while True:
         name = get_input()
-        if name == "Robota：さようなら":
-            break
         print_output(name)
 
         anime = recommend_anime()
-        if anime == "Robota：さようなら":
+        if anime == "さようなら":
             break
         if anime == "鬼滅の刃":
             print("Robota：ありきたりなおすすめですね。")
             break
+
         answer_anime(anime)
         break
 
