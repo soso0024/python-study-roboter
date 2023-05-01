@@ -40,26 +40,24 @@ def main():
 
     say_goodbye()
 
-    # csvファイルから重複したアニメを検索し、カウントを増やす
     anime_count = {}
     with open('roboter-chatlog.csv', 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if row['Name'] in anime_count:
-                anime_count[row['Name']] += 1
-            else:
-                anime_count[row['Name']] = 1
-
-    with open('roboter-chatlog.csv', 'a', newline='') as f:
-        fieldnames = ['Name', 'Count']
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-
-        # ファイルが空の場合はヘッダーを書き込む
-        if f.tell() == 0:
-            writer.writeheader()
-
-        # アニメの名前をname列に書き込む
-        writer.writerow({'Name': anime, 'Count': anime_count[anime]})
+            anime_count[row['Name']] = int(row['Count'])
+        
+    if anime in anime_count:
+        anime_count[anime] += 1
+        with open('roboter-chatlog.csv', 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Name', 'Count'])
+            for anime_name, count in anime_count.items():
+                writer.writerow([anime_name, count])
+    else:
+        anime_count[anime] = 1
+        with open('roboter-chatlog.csv', 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([anime, 1])
     
     print("ログを保存しました。")
     
